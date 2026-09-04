@@ -64,8 +64,25 @@ function ServiceNotFound() {
 
 function ServiceDetail() {
   const { service: fallback } = Route.useLoaderData();
-  const { services } = useCatalog();
-  const s = services.find((x) => x.slug === fallback.slug) ?? fallback;
+  const { slug } = Route.useParams();
+  const { catalog, isLoaded } = useCatalogQuery();
+  const services = catalog.services;
+  const wanted = slugify(slug);
+  const s = services.find((x) => slugify(x.slug) === wanted) ?? fallback;
+
+  if (!s) {
+    // Still waiting on the live catalogue: don't flash a 404 for an
+    // admin-created service.
+    if (!isLoaded) {
+      return (
+        <div className="mx-auto max-w-xl px-4 py-24 text-center text-sm text-muted-foreground">
+          Loading service…
+        </div>
+      );
+    }
+    return <ServiceNotFound />;
+  }
+
   const related = services.filter((x) => x.category === s.category && x.slug !== s.slug).slice(0, 3);
   const message = `Hi Namma Laundry, I would like a quote for ${s.name}.`;
 
