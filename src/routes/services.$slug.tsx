@@ -5,8 +5,9 @@ import { CtaSection } from "@/components/site/CtaBar";
 import { PageHeader } from "@/components/site/PageHeader";
 import { Button } from "@/components/ui/button";
 import { getService } from "@/data/services";
-import { useCatalog } from "@/lib/catalog";
+import { useCatalogQuery } from "@/lib/catalog";
 import { site, telLink, waLink } from "@/lib/site";
+import { slugify } from "@/lib/slug";
 
 export const Route = createFileRoute("/services/$slug")({
   // Services created in the admin panel only exist in Firestore, so a slug
