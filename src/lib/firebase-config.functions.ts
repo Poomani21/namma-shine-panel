@@ -8,7 +8,7 @@ import { createServerFn } from "@tanstack/react-start";
  */
 export const getFirebaseConfig = createServerFn({ method: "GET" }).handler(async () => {
   return {
-    apiKey: (process.env["GOOGLE_API_KEY"] ?? "").trim(),
+    apiKey: "AIzaSyA53ZxJ9RF5Pr1znVmUNmVkAitV0MG4MQA",
     authDomain: "namma-laundry-1c362.firebaseapp.com",
     projectId: "namma-laundry-1c362",
     storageBucket: "namma-laundry-1c362.firebasestorage.app",
