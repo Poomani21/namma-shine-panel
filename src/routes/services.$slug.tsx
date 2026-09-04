@@ -14,10 +14,10 @@ export const Route = createFileRoute("/services/$slug")({
   // against the live catalogue once that loads.
   loader: ({ params }) => ({ service: getService(params.slug) ?? null }),
   head: ({ loaderData }) => {
-    if (!loaderData) {
-      return { meta: [{ title: "Service not found | Namma Laundry" }, { name: "robots", content: "noindex" }] };
+    const s = loaderData?.service;
+    if (!s) {
+      return { meta: [{ title: "Service | Namma Laundry" }, { name: "robots", content: "noindex" }] };
     }
-    const s = loaderData.service;
     return {
       meta: [
         { title: `${s.name} in ${site.city} | Namma Laundry` },
