@@ -14,6 +14,7 @@ import {
   type ServiceDef,
 } from "@/data/services";
 import { COLLECTIONS, getDb } from "@/lib/firebase";
+import { slugify } from "@/lib/slug";
 
 /**
  * Live catalogue.
