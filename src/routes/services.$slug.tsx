@@ -1,24 +1,24 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check, MessageCircle, Phone } from "lucide-react";
 
 import { CtaSection } from "@/components/site/CtaBar";
 import { PageHeader } from "@/components/site/PageHeader";
 import { Button } from "@/components/ui/button";
 import { getService } from "@/data/services";
-import { useCatalog } from "@/lib/catalog";
+import { useCatalogQuery } from "@/lib/catalog";
 import { site, telLink, waLink } from "@/lib/site";
+import { slugify } from "@/lib/slug";
 
 export const Route = createFileRoute("/services/$slug")({
-  loader: ({ params }) => {
-    const service = getService(params.slug);
-    if (!service) throw notFound();
-    return { service };
-  },
+  // Services created in the admin panel only exist in Firestore, so a slug
+  // missing from the bundled data is NOT a 404 — the component resolves it
+  // against the live catalogue once that loads.
+  loader: ({ params }) => ({ service: getService(params.slug) ?? null }),
   head: ({ loaderData }) => {
-    if (!loaderData) {
-      return { meta: [{ title: "Service not found | Namma Laundry" }, { name: "robots", content: "noindex" }] };
+    const s = loaderData?.service;
+    if (!s) {
+      return { meta: [{ title: "Service | Namma Laundry" }, { name: "robots", content: "noindex" }] };
     }
-    const s = loaderData.service;
     return {
       meta: [
         { title: `${s.name} in ${site.city} | Namma Laundry` },
@@ -65,8 +65,25 @@ function ServiceNotFound() {
 
 function ServiceDetail() {
   const { service: fallback } = Route.useLoaderData();
-  const { services } = useCatalog();
-  const s = services.find((x) => x.slug === fallback.slug) ?? fallback;
+  const { slug } = Route.useParams();
+  const { catalog, isLoaded } = useCatalogQuery();
+  const services = catalog.services;
+  const wanted = slugify(slug);
+  const s = services.find((x) => slugify(x.slug) === wanted) ?? fallback;
+
+  if (!s) {
+    // Still waiting on the live catalogue: don't flash a 404 for an
+    // admin-created service.
+    if (!isLoaded) {
+      return (
+        <div className="mx-auto max-w-xl px-4 py-24 text-center text-sm text-muted-foreground">
+          Loading service…
+        </div>
+      );
+    }
+    return <ServiceNotFound />;
+  }
+
   const related = services.filter((x) => x.category === s.category && x.slug !== s.slug).slice(0, 3);
   const message = `Hi Namma Laundry, I would like a quote for ${s.name}.`;
 

@@ -47,6 +47,7 @@ import { priceList as staticPriceList } from "@/data/pricing";
 import { serviceDefs } from "@/data/services";
 import type { PriceDoc, ServiceDoc } from "@/lib/catalog";
 import { COLLECTIONS, getDb, getFirebaseAuth } from "@/lib/firebase";
+import { slugify } from "@/lib/slug";
 
 export const Route = createFileRoute("/admin")({
   ssr: false,
@@ -546,9 +547,11 @@ function ServicesTab({
   };
 
   const save = async (s: ServiceDoc) => {
-    const slug = s.slug.trim();
+    // The doc id IS the public URL segment, so always store the normalised
+    // slug ("Dry Cleaningsss" -> "dry-cleaningsss").
+    const slug = slugify(s.slug || s.name);
     if (!slug || !s.name.trim()) {
-      toast.error("Slug and name are required");
+      toast.error("Name is required");
       return;
     }
     const db = await getDb();
@@ -656,12 +659,26 @@ function ServiceDialog({
         <div className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="s-slug">Slug (URL)</Label>
-              <Input id="s-slug" value={draft.slug} disabled={!isNew} onChange={(e) => set({ slug: e.target.value })} />
+              <Label htmlFor="s-name">Name</Label>
+              <Input
+                id="s-name"
+                value={draft.name}
+                onChange={(e) => {
+                  const name = e.target.value;
+                  // New services keep the slug in sync with the name.
+                  set(isNew ? { name, slug: slugify(name) } : { name });
+                }}
+              />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="s-name">Name</Label>
-              <Input id="s-name" value={draft.name} onChange={(e) => set({ name: e.target.value })} />
+              <Label htmlFor="s-slug">Slug (URL)</Label>
+              <Input
+                id="s-slug"
+                value={draft.slug}
+                disabled={!isNew}
+                onChange={(e) => set({ slug: slugify(e.target.value) })}
+              />
+              <p className="text-xs text-muted-foreground">/services/{draft.slug || "…"}</p>
             </div>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">

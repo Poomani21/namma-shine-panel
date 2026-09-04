@@ -14,6 +14,7 @@ import {
   type ServiceDef,
 } from "@/data/services";
 import { COLLECTIONS, getDb } from "@/lib/firebase";
+import { slugify } from "@/lib/slug";
 
 /**
  * Live catalogue.
@@ -80,10 +81,12 @@ export async function fetchCatalog(): Promise<Catalog> {
     getDocs(collection(db, COLLECTIONS.services)),
   ]);
   const prices = priceSnap.docs.map((d) => ({ ...(d.data() as Omit<PriceDoc, "id">), id: d.id }));
-  const serviceRows = serviceSnap.docs.map((d) => ({
-    ...(d.data() as Omit<ServiceDoc, "slug">),
-    slug: d.id,
-  }));
+  const serviceRows = serviceSnap.docs.map((d) => {
+    const data = d.data() as Omit<ServiceDoc, "slug">;
+    // Older documents were saved with a raw doc id ("Dry-Cleaningsss").
+    // The public URL always uses the normalised form.
+    return { ...data, slug: slugify(d.id || data.name) };
+  });
   return buildCatalog(prices as PriceDoc[], serviceRows as ServiceDoc[]);
 }
 
@@ -96,9 +99,14 @@ export const catalogQueryOptions = {
 
 /** Live catalogue with the bundled data as an instant, SSR-safe fallback. */
 export function useCatalog(): Catalog {
-  const { data } = useQuery({
+  return useCatalogQuery().catalog;
+}
+
+/** Same as useCatalog(), plus whether the live data has arrived yet. */
+export function useCatalogQuery(): { catalog: Catalog; isLoaded: boolean } {
+  const { data, isFetched } = useQuery({
     ...catalogQueryOptions,
     enabled: typeof window !== "undefined",
   });
-  return data ?? staticCatalog;
+  return { catalog: data ?? staticCatalog, isLoaded: isFetched };
 }

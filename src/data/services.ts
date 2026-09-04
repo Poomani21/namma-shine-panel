@@ -1,5 +1,7 @@
 import { getPrice } from "./pricing";
 
+import { slugify } from "@/lib/slug";
+
 import bagImg from "@/assets/services/bag-cleaning.jpg";
 import blanketImg from "@/assets/services/blankets.jpg";
 import carpetImg from "@/assets/services/carpets.jpg";
@@ -430,5 +432,6 @@ export const serviceGroups: { title: string; category: Service["category"]; note
 ];
 
 export function getService(slug: string) {
-  return services.find((s) => s.slug === slug);
+  const wanted = slugify(slug);
+  return services.find((s) => s.slug === slug || slugify(s.slug) === wanted);
 }
