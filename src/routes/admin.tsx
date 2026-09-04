@@ -546,9 +546,11 @@ function ServicesTab({
   };
 
   const save = async (s: ServiceDoc) => {
-    const slug = s.slug.trim();
+    // The doc id IS the public URL segment, so always store the normalised
+    // slug ("Dry Cleaningsss" -> "dry-cleaningsss").
+    const slug = slugify(s.slug || s.name);
     if (!slug || !s.name.trim()) {
-      toast.error("Slug and name are required");
+      toast.error("Name is required");
       return;
     }
     const db = await getDb();
