@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check, MessageCircle, Phone } from "lucide-react";
 
 import { CtaSection } from "@/components/site/CtaBar";
