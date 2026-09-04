@@ -80,10 +80,12 @@ export async function fetchCatalog(): Promise<Catalog> {
     getDocs(collection(db, COLLECTIONS.services)),
   ]);
   const prices = priceSnap.docs.map((d) => ({ ...(d.data() as Omit<PriceDoc, "id">), id: d.id }));
-  const serviceRows = serviceSnap.docs.map((d) => ({
-    ...(d.data() as Omit<ServiceDoc, "slug">),
-    slug: d.id,
-  }));
+  const serviceRows = serviceSnap.docs.map((d) => {
+    const data = d.data() as Omit<ServiceDoc, "slug">;
+    // Older documents were saved with a raw doc id ("Dry-Cleaningsss").
+    // The public URL always uses the normalised form.
+    return { ...data, slug: slugify(d.id || data.name) };
+  });
   return buildCatalog(prices as PriceDoc[], serviceRows as ServiceDoc[]);
 }
 
