@@ -9,11 +9,10 @@ import { useCatalog } from "@/lib/catalog";
 import { site, telLink, waLink } from "@/lib/site";
 
 export const Route = createFileRoute("/services/$slug")({
-  loader: ({ params }) => {
-    const service = getService(params.slug);
-    if (!service) throw notFound();
-    return { service };
-  },
+  // Services created in the admin panel only exist in Firestore, so a slug
+  // missing from the bundled data is NOT a 404 — the component resolves it
+  // against the live catalogue once that loads.
+  loader: ({ params }) => ({ service: getService(params.slug) ?? null }),
   head: ({ loaderData }) => {
     if (!loaderData) {
       return { meta: [{ title: "Service not found | Namma Laundry" }, { name: "robots", content: "noindex" }] };
