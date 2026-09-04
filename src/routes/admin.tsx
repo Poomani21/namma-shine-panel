@@ -658,12 +658,26 @@ function ServiceDialog({
         <div className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="s-slug">Slug (URL)</Label>
-              <Input id="s-slug" value={draft.slug} disabled={!isNew} onChange={(e) => set({ slug: e.target.value })} />
+              <Label htmlFor="s-name">Name</Label>
+              <Input
+                id="s-name"
+                value={draft.name}
+                onChange={(e) => {
+                  const name = e.target.value;
+                  // New services keep the slug in sync with the name.
+                  set(isNew ? { name, slug: slugify(name) } : { name });
+                }}
+              />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="s-name">Name</Label>
-              <Input id="s-name" value={draft.name} onChange={(e) => set({ name: e.target.value })} />
+              <Label htmlFor="s-slug">Slug (URL)</Label>
+              <Input
+                id="s-slug"
+                value={draft.slug}
+                disabled={!isNew}
+                onChange={(e) => set({ slug: slugify(e.target.value) })}
+              />
+              <p className="text-xs text-muted-foreground">/services/{draft.slug || "…"}</p>
             </div>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
