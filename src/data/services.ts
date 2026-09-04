@@ -1,5 +1,7 @@
 import { getPrice } from "./pricing";
 
+import { slugify } from "@/lib/slug";
+
 import bagImg from "@/assets/services/bag-cleaning.jpg";
 import blanketImg from "@/assets/services/blankets.jpg";
 import carpetImg from "@/assets/services/carpets.jpg";
