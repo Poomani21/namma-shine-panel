@@ -47,6 +47,7 @@ import { priceList as staticPriceList } from "@/data/pricing";
 import { serviceDefs } from "@/data/services";
 import type { PriceDoc, ServiceDoc } from "@/lib/catalog";
 import { COLLECTIONS, getDb, getFirebaseAuth } from "@/lib/firebase";
+import { slugify } from "@/lib/slug";
 
 export const Route = createFileRoute("/admin")({
   ssr: false,
