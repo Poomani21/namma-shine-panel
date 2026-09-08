@@ -191,55 +191,59 @@ function LoginCard() {
   };
 
   return (
-    <AdminShell>
-      <Card className="shadow-2xl border border-[#d9a74a]/40 bg-[#072a1d]/95 backdrop-blur-md overflow-hidden rounded-2xl text-white">
-        <div className="h-1.5 w-full bg-gradient-to-r from-[#d9a74a] via-[#f1cb72] to-[#d9a74a]" />
-        <CardHeader className="text-center pb-2">
-          <div className="mx-auto mb-2 flex size-12 items-center justify-center rounded-full bg-[#d9a74a]/10 text-[#d9a74a] border border-[#d9a74a]/40 shadow-[0_0_15px_rgba(217,167,74,0.25)]">
-            <Sparkles className="size-6" />
+  <AdminShell>
+    <Card className="shadow-2xl border border-[#d9a74a]/40 bg-[#072a1d]/95 backdrop-blur-md overflow-hidden rounded-2xl text-white">
+      <div className="h-1.5 w-full bg-gradient-to-r from-[#d9a74a] via-[#f1cb72] to-[#d9a74a]" />
+      <CardHeader className="text-center pb-2">
+        <div className="mx-auto mb-2 flex size-14 items-center justify-center rounded-full bg-white/10 border border-[#d9a74a]/60 p-2 shadow-[0_0_20px_rgba(217,167,74,0.35)] backdrop-blur-sm">
+          <img
+            src="/favicon.png"
+            alt="Namma Laundry Logo"
+            className="size-full rounded-full object-cover"
+          />
+        </div>
+        <CardTitle className="font-display text-2xl tracking-tight text-white">Namma Laundry Portal</CardTitle>
+        <CardDescription className="text-balance text-xs text-emerald-100/70">
+          Sign in to manage active catalog items, service workflows, and pricing schedules.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="pt-4">
+        <form onSubmit={submit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-xs font-semibold text-[#d9a74a]">Email address</Label>
+            <Input
+              id="email"
+              type="email"
+              required
+              placeholder="staff@nammalaundry.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="username"
+              className="bg-[#0b3d2b] border-[#0e523b] text-white placeholder:text-emerald-100/40 focus-visible:ring-[#d9a74a]"
+            />
           </div>
-          <CardTitle className="font-display text-2xl tracking-tight text-white">Namma Laundry Portal</CardTitle>
-          <CardDescription className="text-balance text-xs text-emerald-100/70">
-            Sign in to manage active catalog items, service workflows, and pricing schedules.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="pt-4">
-          <form onSubmit={submit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-xs font-semibold text-[#d9a74a]">Email address</Label>
-              <Input
-                id="email"
-                type="email"
-                required
-                placeholder="staff@nammalaundry.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                autoComplete="username"
-                className="bg-[#0b3d2b] border-[#0e523b] text-white placeholder:text-emerald-100/40 focus-visible:ring-[#d9a74a]"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-xs font-semibold text-[#d9a74a]">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                required
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete="current-password"
-                className="bg-[#0b3d2b] border-[#0e523b] text-white placeholder:text-emerald-100/40 focus-visible:ring-[#d9a74a]"
-              />
-            </div>
-            <Button type="submit" className="w-full font-semibold shadow-lg bg-[#d9a74a] hover:bg-[#c49339] text-[#03150e] transition-all" disabled={busy}>
-              {busy ? <Loader2 className="mr-2 size-4 animate-spin text-[#03150e]" /> : null}
-              Sign in to Admin Dashboard
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-    </AdminShell>
-  );
+          <div className="space-y-2">
+            <Label htmlFor="password" className="text-xs font-semibold text-[#d9a74a]">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              required
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+              className="bg-[#0b3d2b] border-[#0e523b] text-white placeholder:text-emerald-100/40 focus-visible:ring-[#d9a74a]"
+            />
+          </div>
+          <Button type="submit" className="w-full font-semibold shadow-lg bg-[#d9a74a] hover:bg-[#c49339] text-[#03150e] transition-all" disabled={busy}>
+            {busy ? <Loader2 className="mr-2 size-4 animate-spin text-[#03150e]" /> : null}
+            Sign in to Admin Dashboard
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
+  </AdminShell>
+);
 }
 
 function NotAuthorised({ email }: { email: string }) {
@@ -350,11 +354,11 @@ function Dashboard({ user }: { user: User }) {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button asChild variant="outline" size="sm" className="h-9 border-[#d9a74a]/40 text-[#d9a74a] hover:bg-[#d9a74a] hover:text-[#03150e] bg-transparent transition-all">
-              <Link to="/">
-                <ExternalLink className="mr-1.5 size-3.5" /> View Main Site
-              </Link>
-            </Button>
+          <Button asChild variant="outline" size="sm" className="h-9 border-[#d9a74a]/40 text-[#d9a74a] hover:bg-[#d9a74a] hover:text-[#03150e] bg-transparent transition-all">
+  <Link to="/" target="_blank" rel="noopener noreferrer">
+    <ExternalLink className="mr-1.5 size-3.5" /> View Main Site
+  </Link>
+</Button>
             <Button
               variant="ghost"
               size="sm"
