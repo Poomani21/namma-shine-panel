@@ -19,7 +19,7 @@ export const askAssistant = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => inputSchema.parse(data))
   .handler(async ({ data }) => {
     const apiKey = process.env["LOVABLE_API_KEY"];
-    if (!apiKey) return { reply: FALLBACK };
+    if (!apiKey) { console.error("[assistant] no api key"); return { reply: FALLBACK }; }
 
     const system = SYSTEM_PROMPT.replace("{{KNOWLEDGE}}", buildSiteKnowledge());
 
@@ -42,14 +42,15 @@ export const askAssistant = createServerFn({ method: "POST" })
           reply:
             "We're getting a lot of questions right now. Please try again in a moment, or message us on WhatsApp.",
         };
-      if (!res.ok) return { reply: FALLBACK };
+      if (!res.ok) { console.error("[assistant] gateway", res.status, (await res.text()).slice(0,300)); return { reply: FALLBACK }; }
 
       const json = (await res.json()) as {
         choices?: { message?: { content?: string } }[];
       };
       const reply = json.choices?.[0]?.message?.content?.trim();
       return { reply: reply && reply.length > 0 ? reply : FALLBACK };
-    } catch {
+    } catch (e) {
+      console.error("[assistant] error", e);
       return { reply: FALLBACK };
     }
   });
