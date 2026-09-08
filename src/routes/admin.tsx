@@ -904,7 +904,7 @@ function ServiceDialog({
                 id="s-category"
                 placeholder="e.g. everyday, express, specialty"
                 value={draft.category}
-                onChange={(e) => set({ category: e.target.value })}
+                onChange={(e) => set({ category: e.target.value as ServiceDoc["category"] })}
                 className="bg-[#0b3d2b] border-[#0e523b] text-white placeholder:text-emerald-100/40"
               />
             </div>
