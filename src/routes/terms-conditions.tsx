@@ -62,7 +62,7 @@ type Section = {
 };
 
 // Exact original content order preserved
-const sections: Section[] = [
+export const sections: Section[] = [
   {
     id: "order-acceptance",
     heading: "ORDER ACCEPTANCE",
