@@ -15,6 +15,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { MobileCtaBar } from "@/components/site/CtaBar";
+import { ChatWidget } from "@/components/site/ChatWidget";
 import { site } from "@/lib/site";
 
 function NotFoundComponent() {
@@ -168,6 +169,7 @@ function RootComponent() {
         <Footer />
         <div className="h-16 lg:hidden" />
         <MobileCtaBar />
+        <ChatWidget />
       </div>
     </QueryClientProvider>
   );
