@@ -156,7 +156,7 @@ function Index() {
                 key={s.slug}
                 to="/services/$slug"
                 params={{ slug: s.slug }}
-                className="group flex items-center gap-3 rounded-2xl bg-card p-3 text-foreground shadow-lg transition-transform hover:-translate-y-0.5"
+                className="group flex min-w-0 items-center gap-3 rounded-2xl bg-card p-3 text-foreground shadow-lg transition-transform hover:-translate-y-0.5"
               >
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-display text-lg text-primary">{s.name}</span>
